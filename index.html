@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+	<title>Document</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<div class="navbar-brand col-center">Random Trivia Game</div>
+				<span class="credit">special thanks to opentdb API</span>
+			</div>
+		</div>
+	</nav>
+	<div class="container start-trivia">
+		<div class="row start-row">
+			<h1>Make sure you are ready for this action before hitting start.</h1>
+			<div class="col-md-4 col-center start">
+				<button class="btn-start">START</button>
+			</div>
+		</div>
+	</div>
+	<div class="container start-questions box hidden">
+		<div class="row vertical-center col-center">
+			<div class="col-md-12">
+				<div class="row size-adjust">
+					<div class="col-md-6 timer col-center"></div>
+					<div class="col-md-6 col-center question">
+						<!-- display question -->
+					</div>
+				</div>
+				<div class="row col-center">
+					<!-- display multiple choices -->
+					<div class="col-md-4 col-center choices">
+						<!-- Insert choices here -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container view-result hidden">
+		<h1 class="correct-answer"></h1>
+		<!-- Displays the gif corrisponding with success or failure here -->
+		<div class="row scores">
+			<div class="col-sm-2 col-center correct-score score"></div>
+			<div class="col-sm-2 col-center unanswered-score score"></div>
+			<div class="col-sm-2 col-center incorrect-score score"></div>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	 crossorigin="anonymous"></script>
+	<script src="assets/javascript/bootstrap.min.js"></script>
+	<script src="assets/javascript/app.js"></script>
+</body>
+
+</html>
