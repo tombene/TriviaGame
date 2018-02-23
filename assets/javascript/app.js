@@ -85,7 +85,9 @@ $(document).ready(function () {
 			method: "GET"
 		}).then(function (response) {
 			//display question
+			$('.timer').empty();
 			timer.timeRemaining = 30;
+			$('.timer').text(timer.timeRemaining);
 			timer.start();
 			$('.question').text(decodeURIComponent(response.results[0].question));
 
