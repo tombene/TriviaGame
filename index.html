@@ -23,7 +23,7 @@
 		<div class="row start-row">
 			<h1>Make sure you are ready for this action before hitting start.</h1>
 			<div class="col-md-4 col-center start">
-				<button class="btn-start">START</button>
+				<button class="btn-start" id="start">START</button>
 			</div>
 		</div>
 	</div>
@@ -49,10 +49,27 @@
 		<h1 class="correct-answer"></h1>
 		<!-- Displays the gif corrisponding with success or failure here -->
 		<div class="row scores">
-			<div class="col-sm-2 col-center correct-score score"></div>
-			<div class="col-sm-2 col-center unanswered-score score"></div>
-			<div class="col-sm-2 col-center incorrect-score score"></div>
+			<div class="col-sm-4 score">
+				<span class="score-tag correct-score"></span>
+			</div>
+			<div class="col-sm-4 score">
+				<span class="score-tag unanswered-score "></span>
+			</div>
+			<div class="col-sm-4 score">
+				<span class="score-tag incorrect-score"></span>
+			</div>
+
 		</div>
+		<div class="row">
+			<div class="btn-restart hidden" id="btn-restart">
+				<span class="span-restart">RESTART?</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6" id="question-result"></div>
+			<div class="col-md-6" id="result-gif"></div>
+		</div>
+
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	 crossorigin="anonymous"></script>

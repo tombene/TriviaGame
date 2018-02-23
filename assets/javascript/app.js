@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 	var timer = {
 		timeRemaining: 30,
-		waitTime: 3,
+		waitTime: 2,
 		start: function () {
 
 			//  Time for questions.
@@ -17,8 +17,10 @@ $(document).ready(function () {
 					$('.timer').text(timer.timeRemaining);
 				} else {
 					userUnansweredCount++;
-					displayFailure();
+					questionsGuessed++;
+					displayUnanswered();
 					timer.stop();
+					timer.timeBetweenQuestions();
 				}
 			}, 1000);
 		},
@@ -31,18 +33,25 @@ $(document).ready(function () {
 
 		},
 		timeBetweenQuestions: function () {
-			waitIntervalId = setInterval(function () {
-				if (timer.waitTime > 0) {
-					timer.waitTime--;
-					$('time').text(timer.waitTime);
-				} else {
-					timer.waitTime = 3;
-					timer.stop();
-					$('.view-result').attr('class', 'container view-result vertical-center col-center box hidden');
-					$('.start-questions').attr('class', 'container start-questions box show');
-					nextQuestion();
-				}
-			}, 1000);
+			//Check if the game is over before displaying a new question
+			if (questionsGuessed < totalQuestions) {
+				waitIntervalId = setInterval(function () {
+					if (timer.waitTime > 0) {
+						timer.waitTime--;
+						$('time').text(timer.waitTime);
+					} else {
+						timer.waitTime = 3;
+						timer.stop();
+						$('.view-result').attr('class', 'container view-result vertical-center col-center box hidden');
+						$('.start-questions').attr('class', 'container start-questions box show');
+						nextQuestion();
+					}
+				}, 1000);
+			} else {
+				console.log('game over');
+				timer.stop();
+				gameOver();
+			}
 		}
 	}
 
@@ -56,9 +65,13 @@ $(document).ready(function () {
 		questionsGuessed = 0;
 		timer.timeRemaining = 30;
 		userUnansweredCount = 0;
+		$('.choices').empty();
+		$('.question').empty();
+		$('#result-gif').empty();
 	}
 
 	function nextQuestion() {
+
 		//Set API URL to get next question
 		var queryURL = "https://opentdb.com/api.php?amount=1&encode=url3986";
 		// var queryURL = "https://opentdb.com/api.php?amount=1&category=16&encode=url3986";
@@ -96,26 +109,25 @@ $(document).ready(function () {
 					correctKey = Math.floor(Math.random() * Math.floor(4));
 			}
 
+			//Set multiple choice option array
 			for (var i = 0; i < optionCount; i++) {
 				if (i === correctKey) {
 					options[i] = decodeURIComponent(response.results[0].correct_answer);
 				} else {
 					if (i >= correctKey) {
 						options[i] = decodeURIComponent(response.results[0].incorrect_answers[i - 1]);
-						console.log('greater' + i);
 					} else {
 						options[i] = decodeURIComponent(response.results[0].incorrect_answers[i]);
-						console.log('less' + i);
 					}
 				}
-				console.log(correctKey);
 				//display choices
 				var p = $('<p class="options" data-picked="' + i + '">').text(optionPrefix[i] + options[i]);
-				console.log(p);
+
 				$('.choices').append(p);
 			}
 
 		});
+
 	}
 
 	//Load another question if we haven't met the predetermined total question count
@@ -127,7 +139,7 @@ $(document).ready(function () {
 	// }
 
 	//Start Trivia Game
-	$('.btn-start').on('click', function () {
+	$('#start').on('click', function () {
 		$('.start-trivia').attr('class', 'start-trivia hidden');
 		$('.start-questions').attr('class', 'container start-questions box show');
 		nextQuestion();
@@ -135,24 +147,46 @@ $(document).ready(function () {
 	});
 
 	function displayScores() {
+		$('.start-questions').attr('class', 'container start-questions box hidden');
 		$('.correct-score').text('Correct: ' + userCorrectCount);
 		$('.incorrect-score').text('Incorrect: ' + userIncorrectCount);
+		$('.unanswered-score').text('UnAnswered: ' + userUnansweredCount);
+		$('.view-result').attr('class', 'container view-result vertical-center col-center box show');
 	}
 
 	function displaySuccess() {
-		$('.start-questions').attr('class', 'container start-questions box hidden');
 		$('.correct-answer').text(options[correctKey]);
-		$('.view-result').append('<h2>Q' + questionsGuessed + ': Success!</h2>');
-		$('.view-result').attr('class', 'container view-result vertical-center col-center box show');
+		$('#question-result').append('<h2>Q' + questionsGuessed + ': Success!</h2>');
+		$('#result-gif').empty();
+		//https://media.giphy.com/media/nXxOjZrbnbRxS/giphy.gif
+		$('#result-gif').append('<img class="img-gif" src="https://media.giphy.com/media/nXxOjZrbnbRxS/giphy.gif">');
+
 		displayScores();
 	}
 
 	function displayFailure() {
-		$('.start-questions').attr('class', 'container start-questions box hidden');
 		$('.correct-answer').text('Correct Answer: ' + options[correctKey]);
-		$('.view-result').append('<h2>Q' + questionsGuessed + ': Failure :o(</h2>');
-		$('.view-result').attr('class', 'container view-result vertical-center col-center box show');
+		$('#question-result').append('<h2>Q' + questionsGuessed + ': Failure :o(</h2>');
+		$('#result-gif').empty();
+		//https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy-downsized.gif
+		$('#result-gif').append('<img class="img-gif" width="width" height="height" src="https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy-downsized.gif">');
+
 		displayScores();
+	}
+
+	function displayUnanswered() {
+		$('.correct-answer').text('Correct Answer: ' + options[correctKey]);
+		$('#question-result').append('<h2>Q' + questionsGuessed + ': Time Ran Out :o(</h2>');
+		$('#result-gif').empty();
+		//https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy-downsized.gif
+		$('#result-gif').append('<img class="img-gif" src="https://media.giphy.com/media/9YhoD4RQeFkT6/giphy-downsized.gif">');
+		displayScores();
+	}
+
+	function gameOver() {
+		displayScores();
+		$('#btn-restart').attr('class', 'btn-restart col-center show');
+		resetTriviaValues();
 	}
 
 	//Allow user to select an answer
@@ -160,7 +194,7 @@ $(document).ready(function () {
 		timer.stop();
 		questionsGuessed++;
 		userChoice = $(this).attr('data-picked');
-		console.log(userChoice, correctKey);
+		console.log('qg: ' + questionsGuessed, correctKey, 'TOTq: ' + totalQuestions);
 		if (userChoice == correctKey) {
 			userCorrectCount++;
 			displaySuccess();
@@ -169,6 +203,14 @@ $(document).ready(function () {
 			displayFailure();
 		}
 		timer.timeBetweenQuestions();
+	});
+
+	$(document).on('click', "#btn-restart", function () {
+		$('.view-result').attr('class', 'container view-result vertical-center col-center box hidden');
+		$('#question-result').empty();
+		$('#btn-restart').attr('class', 'btn-restart hidden');
+		$('.start-questions').attr('class', 'container start-questions box show');
+		nextQuestion();
 	});
 
 });
